@@ -3,8 +3,11 @@ import { DogContext } from "./DogProvider"
 import Dog from "./Dog"
 
 
-export default (props) => {
-    const { dogs } = useContext(DogContext)
+export default (props , history) => {
+    const { dogs, deleteDog } = useContext(DogContext)
+
+
+
 
     return (
         <>
@@ -13,10 +16,15 @@ export default (props) => {
 
                 {
                     dogs.map(dog => {
-                        return <Dog key={dog.id} dog={dog} owner={dog.OwnerId} />
+                        return <Dog key={dog.id} dog={dog} owner={dog.OwnerId} {...props} />
                     })
                 }
-            </div>
+          
+          
+        <button onClick={() => props.history.push("/dog/create")}>
+            Add Dog
+        </button>
+            </div>  
         </>
     )
-}
+    }

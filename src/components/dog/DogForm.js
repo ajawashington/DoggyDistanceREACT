@@ -1,103 +1,149 @@
-import React, { useContext, useRef } from "react"
+import React, { useContext, useState, useEffect, useRef  } from "react"
 import { DogContext } from "./DogProvider"
 import { DogOwnerContext } from "../DogOwner/DogOwnerProvider"
+// import "./Dogs.css"
 
 export default props => {
-    const { DogOwners } = useContext(DogOwnerContext)
-    const { addDog } = useContext(DogContext)
-    const dogName = useRef("")
-    const breed = useRef("")
-    const notes = useRef("")
-    const DogOwner = useRef(0)
+  
+    const { addDog, updateDog, dogs } = useContext(DogContext)
+    const { dogOwners } = useContext(DogOwnerContext)
+    const [dog, setDog] = useState({})
+    const dogOwner = useRef(0)
+  
+    const editMode = props.match.params.hasOwnProperty("DogId")
 
-    const constructNewDog = () => {
-        const DogOwnerId = parseInt(DogOwner.current.value)
+    const handleControlledInputChange = (evt) => {
+        /*
+            When changing a state object or array, always create a new one
+            and change state instead of modifying current one
+        */
+        const newDog = Object.assign({}, dog)
+        newDog[evt.target.dogName] = evt.target.value
+        setDog(newDog)
 
+    }
 
-        if (DogOwnerId === 0) {
-            window.alert("Please select a Dog Owner")
-        } else {
-            addDog({
-                dogName: dogName.current.value,
-                breed: breed.current.value,
-                DogOwnerId: DogOwnerId,
-                notes: notes.current.value,
-            })
-            .then(() => props.history.push("/dogs"))
+    const setDefaults = () => {
+        if (editMode) {
+          
+            const DogId = parseInt(props.match.params.DogId)
+            const selectedDog = dogs.find(a => a.id === DogId) || {}
+            setDog(selectedDog)
         }
     }
 
-    return (
-        <form className="DogForm">
-            <h2 className="DogForm__title">Walk Dog</h2>
-            <fieldset>
+    useEffect(() => {
+        setDefaults()
+    }, [dogs, dogOwners])
+
+    const constructNewDog = () => {
+
+        const dogOwnerId = parseInt(dogOwner.current.value)
+        
+        if (editMode) {
+            updateDog({
+                id: dog.id,
+                dogName: dog.dogName,
+                breed: dog.breed,
+                notes: dog.notes,
+                dogOwnerId: dogOwnerId
+            })
+                .then(() => props.history.push("/dogs"))
+        } else {
+            addDog({
+                dogName: dog.DogName,
+                breed: dog.Breed,
+                notes: dog.Notes,
+                dogOwnerId: dogOwnerId
+            })
+            .then(() => props.history.push("/dogs"))
+    
+        }
+        }
+    
+        return (
+            <form className="dogForm">
+                <h2 className="dogForm__title">{editMode ? "EDIT DOG" : "NEW DOG"}</h2>
+                <fieldset>
+    
                 <div className="form-group">
-                    <label htmlFor="DogName">Dog name: </label>
+                    <label htmlFor="issue">Dog Name</label>
                     <input
                         type="text"
-                        name="Dog Name"
-                        ref={dogName}
+                        id="issue"
+                        name="issue"
+                        defaultValue={dog.dogName}
                         required
                         autoFocus
                         className="form-control"
-                        placeholder="Dog name"
-                    />
+                        placeholder="Dog Name"
+                        proptype="varchar"
+                        onChange={handleControlledInputChange}
+                        />
                 </div>
-            </fieldset>
-            <fieldset>
+                        </fieldset>
+                        <fieldset>
+                            
                 <div className="form-group">
-                    <label htmlFor="DogBreed">Dog breed: </label>
+                    <label htmlFor="amount">Breed</label>
                     <input
                         type="text"
-                        name="DogBreed"
-                        ref={breed}
+                        id="amount"
+                        name="amount"
+                        defaultValue={dog.breed}
                         required
                         className="form-control"
-                        placeholder="Dog breed"
-                    />
+                        proptype="varchar"
+                        placeholder="Breed"
+                        onChange={handleControlledInputChange}
+                        />
                 </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="DogBreed">Dog breed: </label>
-                    <input
-                        type="text"
-                        name="DogNotes"
-                        ref={notes}
-                        required
-                        className="form-control"
-                        placeholder="Dog Notes"
-                    />
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="DogOwner">DogOwner: </label>
-                    <select
-                        defaultValue=""
-                        name="DogOwner"
-                        ref={DogOwner}
-                        className="form-control"
-                    >
-                        <option value="0">Select a DogOwner</option>
-                        {DogOwners.map(e => (
-                            <option key={e.id} value={e.id}>
-                                {e.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </fieldset>
-            <button type="submit"
-                onClick={
-                    evt => {
-                        evt.preventDefault()
+                
+                        </fieldset>
+                        <fieldset>
+                            
+                            <div className="form-group">
+                                <label htmlFor="item">Notes</label>
+                                <input
+                                    type="text"
+                                    id="item"
+                                    name="item"
+                                    defaultValue={dog.notes}
+                                    required
+                                    className="form-control"
+                                    proptype="varchar"
+                                    placeholder="Notes"
+                                    onChange={handleControlledInputChange}
+                                    />
+                            </div>
+                            
+                                    </fieldset>
+                        <fieldset>
+                    <div className="form-group">
+                        <label htmlFor="business">Dog Owner </label>
+                        <select
+                            value={dog.dogOwnerId}
+                            name="businessId"
+                            ref={dogOwner}
+                            className="form-control"
+                            onChange={handleControlledInputChange}
+                        >
+                            <option value="0">Select a Dog Owner</option>
+                            {dogOwners.map(b => (
+                                <option key={b.id} value={b.id}>
+                                    {b.ownerName}
+                                </option>
+                                  
+                            ))}
+                        </select>
+                    </div>
+                </fieldset>
+                        
+                <button type="submit" onClick={evt => 
+                        {evt.preventDefault() 
                         constructNewDog()
-                    }
-                }
-                className="btn btn-primary">
-                Make Walk Reservation
-            </button>
-        </form>
-    )
+                        }}
+                    className="btn btn-primary"> {editMode ? "Edit Dog": "Add Dog"} </button>
+            </form>
+        )
 }
