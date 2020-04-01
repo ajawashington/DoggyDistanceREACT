@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "./node_modules/react"
 
 /*
     The context is imported and used by individual components

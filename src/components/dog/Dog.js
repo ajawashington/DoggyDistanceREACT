@@ -1,6 +1,7 @@
-import React, { useContext, useState} from "react"
-import { Link } from "react-router-dom"
+import React, { useContext, useState} from "./node_modules/react"
+import { Link } from "./node_modules/react-router-dom"
 import { DogContext } from "./DogProvider"
+import "./Dogs.css"
 
 
 export default ({ dog, history }) => {
@@ -18,9 +19,10 @@ export default ({ dog, history }) => {
             </Link>
             </h3>
             <div className="dog__breed">Breed : { dog.breed }</div>
+        {/* <p>Id: {dog.id}</p> */}
             <button onClick={() => {
                 
-                 history.push(`/edit/${dog.id}`)
+                 history.push(`/dog/edit/${dog.id}`)
                  
                 }}>Edit</button>
                 

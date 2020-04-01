@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef  } from "react"
+import React, { useContext, useState, useEffect, useRef  } from "./node_modules/react"
 import { DogContext } from "./DogProvider"
 import { DogOwnerContext } from "../DogOwner/DogOwnerProvider"
 // import "./Dogs.css"
@@ -43,9 +43,9 @@ export default props => {
         if (editMode) {
             updateDog({
                 id: dog.id,
-                dogName: dog.dogName,
-                breed: dog.breed,
-                notes: dog.notes,
+                dogName: dog.DogName,
+                breed: dog.Breed,
+                notes: dog.Notes,
                 dogOwnerId: dogOwnerId
             })
                 .then(() => props.history.push("/dogs"))
@@ -72,7 +72,7 @@ export default props => {
                         type="text"
                         id="issue"
                         name="issue"
-                        defaultValue={dog.dogName}
+                        defaultValue={dog.DogName}
                         required
                         autoFocus
                         className="form-control"
@@ -90,7 +90,7 @@ export default props => {
                         type="text"
                         id="amount"
                         name="amount"
-                        defaultValue={dog.breed}
+                        defaultValue={dog.Breed}
                         required
                         className="form-control"
                         proptype="varchar"
@@ -108,7 +108,7 @@ export default props => {
                                     type="text"
                                     id="item"
                                     name="item"
-                                    defaultValue={dog.notes}
+                                    defaultValue={dog.Notes}
                                     required
                                     className="form-control"
                                     proptype="varchar"
@@ -122,7 +122,7 @@ export default props => {
                     <div className="form-group">
                         <label htmlFor="business">Dog Owner </label>
                         <select
-                            value={dog.dogOwnerId}
+                            value={dog.DogOwnerId}
                             name="businessId"
                             ref={dogOwner}
                             className="form-control"
